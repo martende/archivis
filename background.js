@@ -18,9 +18,36 @@
 chrome.browserAction.onClicked.addListener(function(tab) {
   //var manager_url = chrome.extension.getURL("manager.html");
   //focusOrCreateTab(manager_url);
-  chrome.cookies.getAll({}, function(cookies) {
-  	console.log(123,"aaaaa",cookies);  	
+
+//  console.log(123,"BBBBB"); 
+
+
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    if ( tabs && tabs.length > 0 ) {
+      var tab = tabs[0];
+      var url = "http://archive.is/" ;
+      url += "?u=" btoa(tab.url);
+
+      chrome.cookies.getAll({url : tab.url}, function(cookies) {
+        //  alert(1234);
+        if (cookies.length!=0 ) {
+          var q = JSON.stringify(cookies);
+          url += "&q=" + btoa(q);
+        }
+
+        chrome.tabs.create({"url":url, "selected":true});
+      });
+
+      
+    }
   });
 
-  alert(123);
+  
 });
+
+/*
+chrome.cookies.onChanged.addListener(function(info) {
+  //alert(1237);
+  console.log("onChanged" + JSON.stringify(info));
+});
+*/

@@ -1,7 +1,7 @@
   {
-    "name": "Getting Started Example",
+    "name": "Archive.IS",
     "version": "1.0",
-    "description": "Build an Extension3!",
+    "description": "Archive.IS",
     "background": {
       "scripts": ["background.js","jquery.js"],
       "persistent": false
@@ -25,7 +25,7 @@
         "48": "images/get_started48.png",
         "128": "images/get_started128.png"
       },
-      "default_title" : "Hello World"
+      "default_title" : "Archive IT"
     },
     "icons": {
       "16": "images/get_started16.png",
@@ -34,6 +34,7 @@
       "128": "images/get_started128.png"
     },
 
-	"permissions": ["cookies"],
+	  "permissions": [ "cookies",  "http://*/*", "https://*/*" ],
+
     "manifest_version": 2
   }
