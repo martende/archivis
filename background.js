@@ -26,16 +26,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if ( tabs && tabs.length > 0 ) {
-      var tab = tabs[0];
-      var url = "http://archive.is/" ;
-      url += "?u=" + btoa(tab.url);
-
-      chrome.cookies.getAll({url : tab.url}, function(cookies) {
-        //  alert(1234);
-        if (cookies.length!=0 ) {
-          var q = JSON.stringify(cookies);
-          url += "&q=" + btoa(q);
-        }
+      chrome.cookies.getAll({url : tabs[0].url}, function(cookies) {
 
         var viewTabUrl = chrome.extension.getURL('popup.html?id=' + id++)
         var targetId = null;
