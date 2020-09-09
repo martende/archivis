@@ -15,6 +15,8 @@
 */
   });
 
+var id = 100;
+
 chrome.browserAction.onClicked.addListener(function(tab) {
   //var manager_url = chrome.extension.getURL("manager.html");
   //focusOrCreateTab(manager_url);
@@ -26,7 +28,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     if ( tabs && tabs.length > 0 ) {
       var tab = tabs[0];
       var url = "http://archive.is/" ;
-      url += "?u=" btoa(tab.url);
+      url += "?u=" + btoa(tab.url);
 
       chrome.cookies.getAll({url : tab.url}, function(cookies) {
         //  alert(1234);
@@ -35,7 +37,26 @@ chrome.browserAction.onClicked.addListener(function(tab) {
           url += "&q=" + btoa(q);
         }
 
-        chrome.tabs.create({"url":url, "selected":true});
+        var viewTabUrl = chrome.extension.getURL('popup.html?id=' + id++)
+        var targetId = null;
+
+        chrome.tabs.onUpdated.addListener(function listener(tabId, changedProps) {
+          if (tabId != targetId || changedProps.status != "complete")
+            return;
+          chrome.tabs.onUpdated.removeListener(listener);
+          var views = chrome.extension.getViews();
+          for (var i = 0; i < views.length; i++) {
+            var view = views[i];
+            if (view.location.href == viewTabUrl) {
+              view.setForm(btoa(url),btoa(JSON.stringify(cookies)));
+              break;
+            }
+          }
+        });
+
+        chrome.tabs.create({"url":viewTabUrl, "selected":true}, function(tab) {
+          targetId = tab.id;
+        });
       });
 
       
